@@ -1,0 +1,20 @@
+# Get the base Image
+FROM node:16
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json before other files
+# Utilise Docker cache to save re-installing dependencies if unchanged
+COPY package*.json ./
+
+# Install project dependencies
+RUN npm install
+
+# Copy the rest of the application
+COPY . .
+
+# Expose the port
+EXPOSE 5000
+
+CMD [ "npm", "start" ]

@@ -1,0 +1,5 @@
+If the docker isn't working try
+
+docker-compose down
+docker-compose up --build
+
