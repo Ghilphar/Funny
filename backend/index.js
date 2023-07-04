@@ -33,7 +33,14 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/users', userRoutes);
+// Enable CORS to accept requests from the React app
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
+
+//app.use('/users', userRoutes);
+app.use('/', userRoutes);
+
 
 // Connect to MySQL
 db.connect((err) => {
@@ -53,10 +60,25 @@ db.connect((err) => {
     });
 });
 
-// Enable CORS to accept requests from the React app
-app.use(cors({
-    origin: 'http://localhost:3000'
-}));
+db.connect((err) => {
+    if (err) throw err;
+    console.log('Connected to the database');
+    let sql = `
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            firstname VARCHAR(255) NOT NULL,
+            lastname VARCHAR(255) NOT NULL,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL
+        )`;
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        console.log('Users table created or already exists');
+    });
+});
+
+
 
 app.get('/api/message', (req, res) => {
     const sql = 'SELECT message FROM messages ORDER BY RAND() LIMIT 1';
@@ -67,6 +89,24 @@ app.get('/api/message', (req, res) => {
     });
 });
 
+// Express error handling middleware. This should be after your routes.
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  });
+  
+
+
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 });
+
+// Global error handlers
+process.on('uncaughtException', (err, origin) => {
+    console.error(`Caught exception: ${err}\n` +
+                  `Exception origin: ${origin}`);
+  });
+  
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  });

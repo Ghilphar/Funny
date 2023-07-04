@@ -1,1 +1,4 @@
 We are trying to follow a Routing-based folders organisation.
+
+
+Remember that the Express error handling middleware should be defined after your routes. This is because Express uses a concept called middleware chaining. When a request is received, Express goes through each middleware function in the order they are defined, until it finds a middleware that either ends the response or passes the control to another middleware by calling next().

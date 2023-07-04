@@ -22,6 +22,7 @@ function Register() {
     try {
       await axios.post('http://localhost:5000/register', formData);
       window.location.href = '/login';
+      console.log("Register completed")
     } catch (err) {
       console.error(err);
     }
