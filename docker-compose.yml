@@ -17,13 +17,14 @@ services:
       context: ./backend
       dockerfile: Dockerfile.backend
     volumes:
-      - ./backend:/usr/src/app/backend
+      - ./backend:/app/backend
       - /app/node_modules
     ports:
       - 5000:5000
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
+      #mysql:
+      #  condition: service_healthy
       
   mysql:
       image: mysql:5.7
@@ -34,8 +35,8 @@ services:
         MYSQL_DATABASE: mydb
       ports:
         - 3306:3306
-      #volumes:
-      #  - ./mysql-init/:/docker-entrypoint-initdb.d/  # Add this line
+      volumes:
+        - ./mysql-init/:/docker-entrypoint-initdb.d/  # Add this line
       healthcheck:
         test: ["CMD", "mysqladmin", "-u", "root", "-ppassword", "ping", "-h", "localhost"]
         timeout: 5s
