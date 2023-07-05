@@ -8,7 +8,7 @@ docker rm funny-react-1
 cd frontend
 
 # rebuild the frontend Docker image and start a new container
-docker build -t funny-react .
+docker buildx build -t funny-react -f Dockerfile.frontend .
 
 # navigate back to the main directory
 cd ..

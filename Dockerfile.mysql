@@ -1,0 +1,4 @@
+# Dockerfile.mysql
+FROM mysql:5.7
+
+COPY ./mysql-init/init.sql /docker-entrypoint-initdb.d/init.sql

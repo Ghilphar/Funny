@@ -4,4 +4,5 @@
 cd /mnt/nfs/homes/fgaribot/Documents/Projets_alternance/Funny
 
 # Run docker-compose up with the --build flag
+docker-compose down
 docker-compose up --build

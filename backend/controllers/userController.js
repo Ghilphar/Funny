@@ -26,18 +26,26 @@ exports.login = async (req, res) => {
 
 
 exports.register = async (req, res) => {
-    const { firstname, lastname, username, email, password } = req.body;
-  
-    const hashedPassword = await bcrypt.hash(password, 10);
-  
-    const sql = 'INSERT INTO users SET ?';
-    const user = { firstname, lastname, username, email, password: hashedPassword };
-  
-    db.query(sql, user, (err, result) => {
-      if (err) throw err;
-      res.redirect('/login');
-    });
+  const { firstname, lastname, username, email, password } = req.body;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const sql = 'INSERT INTO users SET ?';
+  const user = { firstname, lastname, username, email, password: hashedPassword };
+
+  db.query(sql, user, (err, result) => {
+    if (err) {
+      console.error(err);
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(400).send('Username already exists');
+      } else {
+        return res.status(500).send('Server error');
+      }
+    }
+    res.status(200).json({ message: "User registration successful" });
+  });
 };
+
 
 exports.logout = (req, res) => {
     req.session.destroy((err) => {
