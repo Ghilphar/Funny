@@ -43,22 +43,22 @@ app.use('/', userRoutes);
 
 
 // Connect to MySQL
-db.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to the database');
-    let sql = 'CREATE TABLE IF NOT EXISTS messages(message VARCHAR(255))';
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        console.log('Messages table created or already exists');
-
-        // Insert a message
-        sql = `INSERT INTO messages (message) VALUES ('Hello World')`;
-        db.query(sql, (err, result) => {
-            if (err) throw err;
-            console.log('Inserted message into messages table');
-        });
-    });
-});
+//db.connect((err) => {
+//    if (err) throw err;
+//    console.log('Connected to the database');
+//    let sql = 'CREATE TABLE IF NOT EXISTS messages(message VARCHAR(255))';
+//    db.query(sql, (err, result) => {
+//        if (err) throw err;
+//        console.log('Messages table created or already exists');
+//
+//        // Insert a message
+//        sql = `INSERT INTO messages (message) VALUES ('Hello World')`;
+//        db.query(sql, (err, result) => {
+//            if (err) throw err;
+//            console.log('Inserted message into messages table');
+//        });
+//    });
+//});
 
 //db.connect((err) => {
 //    if (err) throw err;

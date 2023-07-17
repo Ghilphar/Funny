@@ -1,4 +1,4 @@
-version: '3'
+version: '3.1'
 services:
   react:
     build: 
@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile.frontend
     volumes:
       - ./frontend:/usr/src/app/frontend
-      - /app/node_modules
     ports:
       - 3000:3000
     environment:
@@ -17,32 +16,28 @@ services:
       context: ./backend
       dockerfile: Dockerfile.backend
     volumes:
-      - ./backend:/app/backend
+      - ./backend:/app/
       - /app/node_modules
+
     ports:
-      - 5000:5000
+      - 5001:5001
     depends_on:
-      #- mysql
-      mysql:
-        condition: service_healthy
+      - mysql
       
   mysql:
-      #image: mysql:5.7
-      build:
-        context: .
-        dockerfile: Dockerfile.mysql
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: password
-        MYSQL_DATABASE: mydb
-      ports:
-        - 3306:3306
-      #volumes:
-      #  #- ./mysql-init/:/docker-entrypoint-initdb.d/
-      #  - db-data:/var/lib/mysql
-      healthcheck:
-        test: ["CMD", "mysqladmin", "-u", "root", "-ppassword", "ping", "-h", "localhost"]
-        timeout: 5s
-        retries: 10
-#volumes:
-#  db-data:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydb
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db-data/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-u", "root", "-ppassword", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:
